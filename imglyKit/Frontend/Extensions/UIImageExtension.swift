@@ -36,7 +36,7 @@ public extension UIImage {
         drawInRect(CGRect(origin: CGPointZero, size: size))
         let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return normalizedImage
+        return normalizedImage!
     }
 }
 

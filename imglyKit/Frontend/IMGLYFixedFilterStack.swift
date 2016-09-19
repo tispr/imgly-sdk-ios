@@ -21,7 +21,7 @@ public class IMGLYFixedFilterStack: NSObject {
     
     public var enhancementFilter: IMGLYEnhancementFilter = {
         let filter = IMGLYInstanceFactory.enhancementFilter()
-        filter.enabled = false
+        filter.enabledFlag = false
         filter.storeEnhancedImage = true
         return filter
         }()

@@ -47,7 +47,7 @@ public class IMGLYMainEditorViewController: IMGLYEditorViewController {
                 image: UIImage(named: "icon_option_magic", inBundle: bundle, compatibleWithTraitCollection: nil),
                 selectedImage: UIImage(named: "icon_option_magic_active", inBundle: bundle, compatibleWithTraitCollection: nil),
                 handler: { [unowned self] in self.subEditorButtonPressed(.Magic) },
-                showSelection: { [unowned self] in return self.fixedFilterStack.enhancementFilter.enabled }))
+                showSelection: { [unowned self] in return self.fixedFilterStack.enhancementFilter.enabledFlag }))
         
         handlers.append(
             IMGLYActionButton(
@@ -125,7 +125,7 @@ public class IMGLYMainEditorViewController: IMGLYEditorViewController {
         
         let bundle = NSBundle(forClass: self.dynamicType)
         navigationItem.title = NSLocalizedString("main-editor.title", tableName: nil, bundle: bundle, value: "", comment: "")
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: "cancelTapped:")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(IMGLYMainEditorViewController.cancelTapped(_:)))
         
         navigationController?.delegate = self
         
@@ -163,7 +163,7 @@ public class IMGLYMainEditorViewController: IMGLYEditorViewController {
     private func subEditorButtonPressed(buttonType: IMGLYMainMenuButtonType) {
         if (buttonType == IMGLYMainMenuButtonType.Magic) {
             if !updating {
-                fixedFilterStack.enhancementFilter.enabled = !fixedFilterStack.enhancementFilter.enabled
+                fixedFilterStack.enhancementFilter.enabledFlag = !fixedFilterStack.enhancementFilter.enabledFlag
                 updatePreviewImage()
             }
         } else {

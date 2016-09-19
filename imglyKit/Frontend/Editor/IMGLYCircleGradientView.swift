@@ -77,13 +77,13 @@ public class IMGLYCircleGradientView : UIView {
     }
     
     public func configurePanGestureRecognizer() {
-        let panGestureRecognizer = UIPanGestureRecognizer(target:self, action:"handlePanGesture:")
+        let panGestureRecognizer = UIPanGestureRecognizer(target:self, action:#selector(IMGLYCircleGradientView.handlePanGesture(_:)))
         addGestureRecognizer(panGestureRecognizer)
         crossImageView_.addGestureRecognizer(panGestureRecognizer)
     }
     
     public func configurePinchGestureRecognizer() {
-        let pinchGestureRecognizer = UIPinchGestureRecognizer(target:self, action:"handlePinchGesture:")
+        let pinchGestureRecognizer = UIPinchGestureRecognizer(target:self, action:#selector(IMGLYCircleGradientView.handlePinchGesture(_:)))
         addGestureRecognizer(pinchGestureRecognizer)
     }
     
@@ -99,10 +99,10 @@ public class IMGLYCircleGradientView : UIView {
         aPath.closePath()
         
         let aRef = UIGraphicsGetCurrentContext()
-        CGContextSaveGState(aRef)
+        CGContextSaveGState(aRef!)
         aPath.lineWidth = 1
         aPath.stroke()
-        CGContextRestoreGState(aRef)
+        CGContextRestoreGState(aRef!)
     }
     
     public func distanceBetweenControlPoints() -> CGFloat {

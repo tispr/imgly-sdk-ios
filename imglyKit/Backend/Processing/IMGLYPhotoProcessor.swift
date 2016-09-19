@@ -116,7 +116,7 @@ public class IMGLYPhotoProcessor {
         
         if let filteredCIImage = processWithCIImage(coreImage, filters: filters) {
             let filteredCGImage = CIContext(options: nil).createCGImage(filteredCIImage, fromRect: filteredCIImage.extent)
-            result = UIImage(CGImage: filteredCGImage, scale: 1.0, orientation: imageOrientation)
+            result = UIImage(CGImage: filteredCGImage!, scale: 1.0, orientation: imageOrientation)
         }
         
         return result

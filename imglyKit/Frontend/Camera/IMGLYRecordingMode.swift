@@ -47,7 +47,7 @@ import MobileCoreServices
             button.imageView?.animationRepeatCount = 1
             button.adjustsImageWhenHighlighted = false
             
-            for var index = 0; index < 10; index++ {
+            for index in 0 ..< 10 {
                 if let image = UIImage(named:String(format: "LensAperture_ShapeLayer_%05d", index), inBundle: bundle, compatibleWithTraitCollection:nil) {
                     button.imageView?.animationImages?.append(image)
                 }

@@ -77,7 +77,7 @@ public class IMGLYTextFilter : CIFilter {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return image
+        return image!
     }
     
     #elseif os(OSX)

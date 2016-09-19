@@ -10,7 +10,7 @@ import QuartzCore
 
 public typealias IMGLYAnimationDelegateBlock = (Bool) -> (Void)
 
-public class IMGLYAnimationDelegate: NSObject {
+public class IMGLYAnimationDelegate: NSObject, CAAnimationDelegate {
     
     // MARK: - Properties
     
@@ -24,7 +24,7 @@ public class IMGLYAnimationDelegate: NSObject {
     
     // MARK: - Animation Delegate
     
-    public override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+    public func animationDidStop(anim: CAAnimation, finished flag: Bool) {
         block(flag)
     }
 }
