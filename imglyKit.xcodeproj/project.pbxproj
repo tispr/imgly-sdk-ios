@@ -998,7 +998,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.9elements.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = imglyKit;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1020,7 +1020,7 @@
 				PRODUCT_NAME = imglyKit;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

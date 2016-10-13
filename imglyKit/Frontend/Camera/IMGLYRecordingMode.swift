@@ -12,18 +12,18 @@ import Photos
 import MobileCoreServices
 
 @objc public enum IMGLYRecordingMode: Int {
-    case Photo
-    case Video
+    case photo
+    case video
     
-    var bundle: NSBundle {
-        return NSBundle(forClass: IMGLYCameraViewController.self)
+    var bundle: Bundle {
+        return Bundle(for: IMGLYCameraViewController.self)
     }
     
     var titleForSelectionButton: String {
         switch self {
-        case .Photo:
+        case .photo:
             return NSLocalizedString("camera-view-controller.mode.photo", tableName: nil, bundle: bundle, value: "", comment: "")
-        case .Video:
+        case .video:
             return NSLocalizedString("camera-view-controller.mode.video", tableName: nil, bundle: bundle, value: "", comment: "")
         }
     }
@@ -31,30 +31,30 @@ import MobileCoreServices
     var selectionButton: UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(titleForSelectionButton, forState: .Normal)
-        button.titleLabel?.font = UIFont.systemFontOfSize(12)
-        button.setTitleColor(UIColor(red:1, green:0.8, blue:0, alpha:1), forState: .Selected)
+        button.setTitle(titleForSelectionButton, for: UIControlState())
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        button.setTitleColor(UIColor(red:1, green:0.8, blue:0, alpha:1), for: .selected)
         return button
     }
     
     var actionButton: UIControl {
         switch self {
-        case .Photo:
+        case .photo:
             let button = UIButton()
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.setImage(UIImage(named: "LensAperture_ShapeLayer_00000", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal)
+            button.setImage(UIImage(named: "LensAperture_ShapeLayer_00000", in: bundle, compatibleWith: nil), for: UIControlState())
             button.imageView?.animationImages = [UIImage]()
             button.imageView?.animationRepeatCount = 1
             button.adjustsImageWhenHighlighted = false
             
             for index in 0 ..< 10 {
-                if let image = UIImage(named:String(format: "LensAperture_ShapeLayer_%05d", index), inBundle: bundle, compatibleWithTraitCollection:nil) {
+                if let image = UIImage(named:String(format: "LensAperture_ShapeLayer_%05d", index), in: bundle, compatibleWith:nil) {
                     button.imageView?.animationImages?.append(image)
                 }
             }
             
             return button
-        case .Video:
+        case .video:
             let button = IMGLYVideoRecordButton()
             button.translatesAutoresizingMaskIntoConstraints = false
             return button
@@ -63,18 +63,18 @@ import MobileCoreServices
     
     var actionSelector: Selector {
         switch self {
-        case .Photo:
+        case .photo:
             return "takePhoto:"
-        case .Video:
+        case .video:
             return "recordVideo:"
         }
     }
     
     var sessionPreset: String {
         switch self {
-        case .Photo:
+        case .photo:
             return AVCaptureSessionPresetPhoto
-        case .Video:
+        case .video:
             return AVCaptureSessionPresetHigh
         }
     }
