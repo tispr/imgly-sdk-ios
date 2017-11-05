@@ -118,7 +118,7 @@ open class IMGLYEditorViewController: UIViewController {
     
     // MARK: - Actions
     
-    open func tappedDone(_ sender: UIBarButtonItem?) {
+    @objc open func tappedDone(_ sender: UIBarButtonItem?) {
         // Subclasses must override this
     }
     

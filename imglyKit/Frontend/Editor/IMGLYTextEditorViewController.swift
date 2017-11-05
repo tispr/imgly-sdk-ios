@@ -246,7 +246,7 @@ open class IMGLYTextEditorViewController: IMGLYSubEditorViewController {
                 repeat {
                     currentTextSize += 1.0
                     let font = UIFont(name: fontName, size: currentTextSize)
-                    size = text.size(attributes: [ NSFontAttributeName: font as AnyObject ])
+                    size = text.size(withAttributes: [ NSAttributedStringKey.font: font as AnyObject ])
                 } while (size.width < (view.frame.size.width - TextLabelInitialMargin))
             }
         }
@@ -261,7 +261,7 @@ open class IMGLYTextEditorViewController: IMGLYSubEditorViewController {
                 repeat {
                     maximumFontSize += 1.0
                     let font = UIFont(name: fontName, size: maximumFontSize)
-                    size = text.size(attributes: [ NSFontAttributeName: font as AnyObject ])
+                    size = text.size(withAttributes: [ NSAttributedStringKey.font: font as AnyObject ])
                 } while (size.width < self.view.frame.size.width)
             }
         }

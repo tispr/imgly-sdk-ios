@@ -36,7 +36,7 @@ open class IMGLYFontImporter {
             let provider = CGDataProvider(data: data! as CFData)
             let font = CGFont(provider!)
             
-            if (!CTFontManagerRegisterGraphicsFont(font, &error)) {
+            if (!CTFontManagerRegisterGraphicsFont(font!, &error)) {
                 print("Failed to register font, error: \(error)")
                 return
             }

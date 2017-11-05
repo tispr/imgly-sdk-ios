@@ -601,7 +601,7 @@ open class IMGLYCameraViewController: UIViewController {
         let navigationController = IMGLYNavigationController(rootViewController: editorViewController)
         navigationController.navigationBar.barStyle = .black
         navigationController.navigationBar.isTranslucent = false
-        navigationController.navigationBar.titleTextAttributes = [ NSForegroundColorAttributeName : UIColor.white ]
+        navigationController.navigationBar.titleTextAttributes = [ NSAttributedStringKey.foregroundColor : UIColor.white ]
         
         self.present(navigationController, animated: true, completion: nil)
     }
@@ -682,7 +682,7 @@ open class IMGLYCameraViewController: UIViewController {
         }) 
     }
     
-    open func changeFlash(_ sender: UIButton?) {
+    @objc open func changeFlash(_ sender: UIButton?) {
         switch(currentRecordingMode) {
         case .photo:
             cameraController?.selectNextFlashMode()
@@ -691,11 +691,11 @@ open class IMGLYCameraViewController: UIViewController {
         }
     }
     
-    open func switchCamera(_ sender: UIButton?) {
+    @objc open func switchCamera(_ sender: UIButton?) {
         cameraController?.toggleCameraPosition()
     }
     
-    open func showCameraRoll(_ sender: UIButton?) {
+    @objc open func showCameraRoll(_ sender: UIButton?) {
         let imagePicker = UIImagePickerController()
         
         imagePicker.delegate = self
@@ -736,7 +736,7 @@ open class IMGLYCameraViewController: UIViewController {
         }
     }
     
-    open func toggleFilters(_ sender: UIButton?) {
+    @objc open func toggleFilters(_ sender: UIButton?) {
         if let filterSelectionViewConstraint = self.filterSelectionViewConstraint {
             let animationDuration = TimeInterval(0.6)
             let dampingFactor = CGFloat(0.6)
@@ -830,13 +830,13 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
         }
     }
     
-    public func cameraController(_ cameraController: IMGLYCameraController, didChangeToFlashMode flashMode: AVCaptureFlashMode) {
+    public func cameraController(_ cameraController: IMGLYCameraController, didChangeToFlashMode flashMode: AVCaptureDevice.FlashMode) {
         DispatchQueue.main.async {
             self.updateFlashButton()
         }
     }
     
-    public func cameraController(_ cameraController: IMGLYCameraController, didChangeToTorchMode torchMode: AVCaptureTorchMode) {
+    public func cameraController(_ cameraController: IMGLYCameraController, didChangeToTorchMode torchMode: AVCaptureDevice.TorchMode) {
         DispatchQueue.main.async {
             self.updateFlashButton()
         }
@@ -849,13 +849,13 @@ extension IMGLYCameraViewController: IMGLYCameraControllerDelegate {
         }
     }
     
-    public func cameraController(_ cameraController: IMGLYCameraController, willSwitchToCameraPosition cameraPosition: AVCaptureDevicePosition) {
+    public func cameraController(_ cameraController: IMGLYCameraController, willSwitchToCameraPosition cameraPosition: AVCaptureDevice.Position) {
         DispatchQueue.main.async {
             self.buttonsEnabled = false
         }
     }
     
-    public func cameraController(_ cameraController: IMGLYCameraController, didSwitchToCameraPosition cameraPosition: AVCaptureDevicePosition) {
+    public func cameraController(_ cameraController: IMGLYCameraController, didSwitchToCameraPosition cameraPosition: AVCaptureDevice.Position) {
         DispatchQueue.main.async {
             self.buttonsEnabled = true
             self.updateFlashButton()

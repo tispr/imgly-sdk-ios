@@ -68,7 +68,7 @@ open class IMGLYOrientationCropFilter : CIFilter {
         
         if let orientation = inputImage.properties["Orientation"] as? NSNumber {
             // Rotate image to match image orientation before cropping
-            let transform = inputImage.imageTransform(forOrientation: orientation.int32Value)
+            let transform = inputImage.orientationTransform(forExifOrientation: orientation.int32Value)
             flipTransformation = flipTransformation.concatenating(transform)
         }
         
@@ -88,7 +88,7 @@ open class IMGLYOrientationCropFilter : CIFilter {
         
         if let orientation = inputImage.properties["Orientation"] as? NSNumber {
             // Rotate image back to match metadata
-            let invertedTransform = inputImage.imageTransform(forOrientation: orientation.int32Value).inverted()
+            let invertedTransform = inputImage.orientationTransform(forExifOrientation: orientation.int32Value).inverted()
             
             guard let filter = CIFilter(name: "CIAffineTransform") else {
                 return outputImage

@@ -73,9 +73,9 @@ import MobileCoreServices
     var sessionPreset: String {
         switch self {
         case .photo:
-            return AVCaptureSessionPresetPhoto
+            return AVCaptureSession.Preset.photo.rawValue
         case .video:
-            return AVCaptureSessionPresetHigh
+            return AVCaptureSession.Preset.high.rawValue
         }
     }
 }

@@ -60,11 +60,11 @@ private var FocusAndExposureContext = 0
     @objc optional func cameraControllerDidStopCamera(_ cameraController: IMGLYCameraController)
     @objc optional func cameraControllerDidStartStillImageCapture(_ cameraController: IMGLYCameraController)
     @objc optional func cameraControllerDidFailAuthorization(_ cameraController: IMGLYCameraController)
-    @objc optional func cameraController(_ cameraController: IMGLYCameraController, didChangeToFlashMode flashMode: AVCaptureFlashMode)
-    @objc optional func cameraController(_ cameraController: IMGLYCameraController, didChangeToTorchMode torchMode: AVCaptureTorchMode)
+    @objc optional func cameraController(_ cameraController: IMGLYCameraController, didChangeToFlashMode flashMode: AVCaptureDevice.FlashMode)
+    @objc optional func cameraController(_ cameraController: IMGLYCameraController, didChangeToTorchMode torchMode: AVCaptureDevice.TorchMode)
     @objc optional func cameraControllerDidCompleteSetup(_ cameraController: IMGLYCameraController)
-    @objc optional func cameraController(_ cameraController: IMGLYCameraController, willSwitchToCameraPosition cameraPosition: AVCaptureDevicePosition)
-    @objc optional func cameraController(_ cameraController: IMGLYCameraController, didSwitchToCameraPosition cameraPosition: AVCaptureDevicePosition)
+    @objc optional func cameraController(_ cameraController: IMGLYCameraController, willSwitchToCameraPosition cameraPosition: AVCaptureDevice.Position)
+    @objc optional func cameraController(_ cameraController: IMGLYCameraController, didSwitchToCameraPosition cameraPosition: AVCaptureDevice.Position)
     @objc optional func cameraController(_ cameraController: IMGLYCameraController, willSwitchToRecordingMode recordingMode: IMGLYRecordingMode)
     @objc optional func cameraController(_ cameraController: IMGLYCameraController, didSwitchToRecordingMode recordingMode: IMGLYRecordingMode)
     @objc optional func cameraControllerAnimateAlongsideFirstPhaseOfRecordingModeSwitchBlock(_ cameraController: IMGLYCameraController) -> (() -> Void)
@@ -93,15 +93,15 @@ open class IMGLYCameraController: NSObject {
     open weak var delegate: IMGLYCameraControllerDelegate?
     open let tapGestureRecognizer = UITapGestureRecognizer()
     
-    dynamic fileprivate let session = AVCaptureSession()
+    @objc dynamic fileprivate let session = AVCaptureSession()
     fileprivate let sessionQueue = DispatchQueue(label: "capture_session_queue", attributes: [])
     fileprivate var videoDeviceInput: AVCaptureDeviceInput?
     fileprivate var audioDeviceInput: AVCaptureDeviceInput?
     fileprivate var videoDataOutput: AVCaptureVideoDataOutput?
     fileprivate var audioDataOutput: AVCaptureAudioDataOutput?
-    dynamic fileprivate var stillImageOutput: AVCaptureStillImageOutput?
+    @objc dynamic fileprivate var stillImageOutput: AVCaptureStillImageOutput?
     fileprivate var runtimeErrorHandlingObserver: NSObjectProtocol?
-    dynamic fileprivate var deviceAuthorized = false
+    @objc dynamic fileprivate var deviceAuthorized = false
     fileprivate var glContext: EAGLContext?
     fileprivate var ciContext: CIContext?
     fileprivate var videoPreviewView: GLKView?
@@ -121,7 +121,7 @@ open class IMGLYCameraController: NSObject {
     fileprivate let motionManagerQueue = OperationQueue()
     fileprivate var captureVideoOrientation: AVCaptureVideoOrientation?
     
-    dynamic fileprivate var sessionRunningAndDeviceAuthorized: Bool {
+    @objc dynamic fileprivate var sessionRunningAndDeviceAuthorized: Bool {
         return session.isRunning && deviceAuthorized
     }
     
@@ -222,7 +222,7 @@ open class IMGLYCameraController: NSObject {
     // MARK: - Authorization
     
     open func checkDeviceAuthorizationStatus() {
-        AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: { granted in
+        AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { granted in
             if granted {
                 self.deviceAuthorized = true
             } else {
@@ -236,13 +236,13 @@ open class IMGLYCameraController: NSObject {
     
     /// Use this property to determine if more than one camera is available. Within the SDK this property is used to determine if the toggle button is visible.
     open var moreThanOneCameraPresent: Bool {
-        let videoDevices = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
-        return videoDevices!.count > 1
+        let videoDevices = AVCaptureDevice.devices(for: AVMediaType.video)
+        return videoDevices.count > 1
     }
     
     open func toggleCameraPosition() {
         if let device = videoDeviceInput?.device {
-            let nextPosition: AVCaptureDevicePosition
+            let nextPosition: AVCaptureDevice.Position
             
             switch (device.position) {
             case .front:
@@ -280,7 +280,7 @@ open class IMGLYCameraController: NSObject {
             sessionQueue.async {
                 sessionGroup.enter()
                 self.session.beginConfiguration()
-                self.session.removeInput(self.videoDeviceInput)
+                self.session.removeInput(self.videoDeviceInput!)
                 
                 self.removeObserversFromInputDevice()
                 self.setupVideoInputsForPreferredCameraPosition(nextPosition)
@@ -372,7 +372,7 @@ open class IMGLYCameraController: NSObject {
     just toggles between on and off.
     */
     open func selectNextFlashMode() {
-        var nextFlashMode: AVCaptureFlashMode = .off
+        var nextFlashMode: AVCaptureDevice.FlashMode = .off
         
         switch flashMode {
         case .auto:
@@ -394,7 +394,7 @@ open class IMGLYCameraController: NSObject {
         flashMode = nextFlashMode
     }
     
-    open fileprivate(set) var flashMode: AVCaptureFlashMode {
+    open fileprivate(set) var flashMode: AVCaptureDevice.FlashMode {
         get {
             if let device = self.videoDeviceInput?.device {
                 return device.flashMode
@@ -440,7 +440,7 @@ open class IMGLYCameraController: NSObject {
     just toggles between on and off.
     */
     open func selectNextTorchMode() {
-        var nextTorchMode: AVCaptureTorchMode = .off
+        var nextTorchMode: AVCaptureDevice.TorchMode = .off
         
         switch torchMode {
         case .auto:
@@ -462,7 +462,7 @@ open class IMGLYCameraController: NSObject {
         torchMode = nextTorchMode
     }
     
-    open fileprivate(set) var torchMode: AVCaptureTorchMode {
+    open fileprivate(set) var torchMode: AVCaptureDevice.TorchMode {
         get {
             if let device = self.videoDeviceInput?.device {
                 return device.torchMode
@@ -578,7 +578,7 @@ open class IMGLYCameraController: NSObject {
         return false
     }
     
-    fileprivate func focusWithMode(_ focusMode: AVCaptureFocusMode, exposeWithMode exposureMode: AVCaptureExposureMode, atDevicePoint point: CGPoint, monitorSubjectAreaChange: Bool) {
+    fileprivate func focusWithMode(_ focusMode: AVCaptureDevice.FocusMode, exposeWithMode exposureMode: AVCaptureDevice.ExposureMode, atDevicePoint point: CGPoint, monitorSubjectAreaChange: Bool) {
         sessionQueue.async {
             if let device = self.videoDeviceInput?.device {
                 var error: NSError?
@@ -718,8 +718,8 @@ open class IMGLYCameraController: NSObject {
         videoPreviewView!.bindDrawable()
         
         setupWithPreferredCameraPosition(.back) {
-            if self.session.canSetSessionPreset(recordingMode.sessionPreset) {
-                self.session.sessionPreset = recordingMode.sessionPreset
+            if self.session.canSetSessionPreset(AVCaptureSession.Preset(rawValue: recordingMode.sessionPreset)) {
+                self.session.sessionPreset = AVCaptureSession.Preset(rawValue: recordingMode.sessionPreset)
             }
             
             if let device = self.videoDeviceInput?.device {
@@ -778,20 +778,20 @@ open class IMGLYCameraController: NSObject {
         
         sessionQueue.async {
             sessionGroup.enter()
-            if self.session.canSetSessionPreset(recordingMode.sessionPreset) {
-                self.session.sessionPreset = recordingMode.sessionPreset
+            if self.session.canSetSessionPreset(AVCaptureSession.Preset(rawValue: recordingMode.sessionPreset)) {
+                self.session.sessionPreset = AVCaptureSession.Preset(rawValue: recordingMode.sessionPreset)
             }
             sessionGroup.leave()
 
             switch(recordingMode) {
             case .photo:
                 if self.flashAvailable {
-                    self.flashMode = AVCaptureFlashMode(rawValue: self.torchMode.rawValue)!
+                    self.flashMode = AVCaptureDevice.FlashMode(rawValue: self.torchMode.rawValue)!
                     self.torchMode = .off
                 }
             case .video:
                 if self.torchAvailable {
-                    self.torchMode = AVCaptureTorchMode(rawValue: self.flashMode.rawValue)!
+                    self.torchMode = AVCaptureDevice.TorchMode(rawValue: self.flashMode.rawValue)!
                     self.flashMode = .off
                 }
             }
@@ -800,7 +800,7 @@ open class IMGLYCameraController: NSObject {
         }
     }
     
-    fileprivate func setupWithPreferredCameraPosition(_ cameraPosition: AVCaptureDevicePosition, completion: (() -> (Void))?) {
+    fileprivate func setupWithPreferredCameraPosition(_ cameraPosition: AVCaptureDevice.Position, completion: (() -> (Void))?) {
         sessionQueue.async {
             self.setupVideoInputsForPreferredCameraPosition(cameraPosition)
             self.setupAudioInputs()
@@ -810,34 +810,35 @@ open class IMGLYCameraController: NSObject {
         }
     }
     
-    fileprivate func setupVideoInputsForPreferredCameraPosition(_ cameraPosition: AVCaptureDevicePosition) {
+    fileprivate func setupVideoInputsForPreferredCameraPosition(_ cameraPosition: AVCaptureDevice.Position) {
         var error: NSError?
         
-        let videoDevice = IMGLYCameraController.deviceWithMediaType(AVMediaTypeVideo, preferringPosition: cameraPosition)
-        let videoDeviceInput: AVCaptureDeviceInput!
-        do {
-            videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
-        } catch let error1 as NSError {
-            error = error1
-            videoDeviceInput = nil
-        }
-        
-        if let error = error {
-            print("Error in setupVideoInputsForPreferredCameraPosition: \(error.description)")
-        }
-        
-        if self.session.canAddInput(videoDeviceInput) {
-            self.session.addInput(videoDeviceInput)
-            self.videoDeviceInput = videoDeviceInput
+        if let videoDevice = IMGLYCameraController.deviceWithMediaType(AVMediaType.video.rawValue, preferringPosition: cameraPosition) {
+            let videoDeviceInput: AVCaptureDeviceInput!
+            do {
+                videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
+            } catch let error1 as NSError {
+                error = error1
+                videoDeviceInput = nil
+            }
             
-            DispatchQueue.main.async {
-                if let videoPreviewView = self.videoPreviewView, let device = videoDevice {
-                    if device.position == .front {
-                        // front camera is mirrored so we need to transform the preview view
-                        videoPreviewView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
-                        videoPreviewView.transform = videoPreviewView.transform.scaledBy(x: 1, y: -1)
-                    } else {
-                        videoPreviewView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+            if let error = error {
+                print("Error in setupVideoInputsForPreferredCameraPosition: \(error.description)")
+            }
+            
+            if self.session.canAddInput(videoDeviceInput) {
+                self.session.addInput(videoDeviceInput)
+                self.videoDeviceInput = videoDeviceInput
+                
+                DispatchQueue.main.async {
+                    if let videoPreviewView = self.videoPreviewView {
+                        if videoDevice.position == .front {
+                            // front camera is mirrored so we need to transform the preview view
+                            videoPreviewView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+                            videoPreviewView.transform = videoPreviewView.transform.scaledBy(x: 1, y: -1)
+                        } else {
+                            videoPreviewView.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+                        }
                     }
                 }
             }
@@ -847,22 +848,23 @@ open class IMGLYCameraController: NSObject {
     fileprivate func setupAudioInputs() {
         var error: NSError?
         
-        let audioDevice = IMGLYCameraController.deviceWithMediaType(AVMediaTypeAudio, preferringPosition: nil)
-        let audioDeviceInput: AVCaptureDeviceInput!
-        do {
-            audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
-        } catch let error1 as NSError {
-            error = error1
-            audioDeviceInput = nil
-        }
-        
-        if let error = error {
-            print("Error in setupAudioInputs: \(error.description)")
-        }
-        
-        if self.session.canAddInput(audioDeviceInput) {
-            self.session.addInput(audioDeviceInput)
-            self.audioDeviceInput = audioDeviceInput
+        if let audioDevice = IMGLYCameraController.deviceWithMediaType(AVMediaType.audio.rawValue, preferringPosition: nil) {
+            let audioDeviceInput: AVCaptureDeviceInput!
+            do {
+                audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
+            } catch let error1 as NSError {
+                error = error1
+                audioDeviceInput = nil
+            }
+            
+            if let error = error {
+                print("Error in setupAudioInputs: \(error.description)")
+            }
+            
+            if self.session.canAddInput(audioDeviceInput) {
+                self.session.addInput(audioDeviceInput)
+                self.audioDeviceInput = audioDeviceInput
+            }
         }
     }
     
@@ -1032,14 +1034,14 @@ open class IMGLYCameraController: NSObject {
     open func takePhoto(_ completion: @escaping IMGLYTakePhotoBlock) {
         if let stillImageOutput = self.stillImageOutput {
             sessionQueue.async {
-                let connection = stillImageOutput.connection(withMediaType: AVMediaTypeVideo)
+                let connection = stillImageOutput.connection(with: AVMediaType.video)
                 
                 // Update the orientation on the still image output video connection before capturing.
                 if let captureVideoOrientation = self.captureVideoOrientation {
                     connection?.videoOrientation = captureVideoOrientation
                 }
                 
-                stillImageOutput.captureStillImageAsynchronously(from: connection) {
+                stillImageOutput.captureStillImageAsynchronously(from: connection!) {
                     (imageDataSampleBuffer: CMSampleBuffer?, error: Error?) -> Void in
                     
                     if let imageDataSampleBuffer = imageDataSampleBuffer {
@@ -1094,7 +1096,7 @@ open class IMGLYCameraController: NSObject {
             
             let newAssetWriter: AVAssetWriter!
             do {
-                newAssetWriter = try AVAssetWriter(outputURL: outputFileURL, fileType: AVFileTypeQuickTimeMovie)
+                newAssetWriter = try AVAssetWriter(outputURL: outputFileURL, fileType: AVFileType.mov)
             } catch let error1 as NSError {
                 error = error1
                 newAssetWriter = nil
@@ -1107,8 +1109,8 @@ open class IMGLYCameraController: NSObject {
                 return
             }
             
-            let videoCompressionSettings = self.videoDataOutput?.recommendedVideoSettingsForAssetWriter(withOutputFileType: AVFileTypeQuickTimeMovie)
-            self.assetWriterVideoInput = AVAssetWriterInput(mediaType: AVMediaTypeVideo, outputSettings: videoCompressionSettings as? [String: AnyObject])
+            let videoCompressionSettings = self.videoDataOutput?.recommendedVideoSettingsForAssetWriter(writingTo: AVFileType.mov)
+            self.assetWriterVideoInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoCompressionSettings as? [String: AnyObject])
             self.assetWriterVideoInput!.expectsMediaDataInRealTime = true
             
             var sourcePixelBufferAttributes: [String: AnyObject] = [String(kCVPixelBufferPixelFormatTypeKey): NSNumber(value: kCVPixelFormatType_32BGRA as UInt32), String(kCVPixelFormatOpenGLESCompatibility): kCFBooleanTrue]
@@ -1138,10 +1140,10 @@ open class IMGLYCameraController: NSObject {
             newAssetWriter.add(self.assetWriterVideoInput!)
             
             if self.audioDeviceInput != nil {
-                let audioCompressionSettings = self.audioDataOutput?.recommendedAudioSettingsForAssetWriter(withOutputFileType: AVFileTypeQuickTimeMovie) as? [String: AnyObject]
+                let audioCompressionSettings = self.audioDataOutput?.recommendedAudioSettingsForAssetWriter(writingTo: AVFileType.mov) as? [String: AnyObject]
                 
-                if newAssetWriter.canApply(outputSettings: audioCompressionSettings, forMediaType: AVMediaTypeAudio) {
-                    self.assetWriterAudioInput = AVAssetWriterInput(mediaType: AVMediaTypeAudio, outputSettings: audioCompressionSettings)
+                if newAssetWriter.canApply(outputSettings: audioCompressionSettings, forMediaType: AVMediaType.audio) {
+                    self.assetWriterAudioInput = AVAssetWriterInput(mediaType: AVMediaType.audio, outputSettings: audioCompressionSettings)
                     self.assetWriterAudioInput?.expectsMediaDataInRealTime = true
                     
                     if newAssetWriter.canAdd(self.assetWriterAudioInput!) {
@@ -1264,25 +1266,25 @@ open class IMGLYCameraController: NSObject {
         
         // Adding a simple snapshot and immediately showing it
         let snapshot = videoPreviewView.snapshotView(afterScreenUpdates: false)
-        snapshot!.transform = videoPreviewView.transform
-        snapshot!.frame = previewView.frame
-        previewView.superview?.addSubview(snapshot!)
+        snapshot?.transform = videoPreviewView.transform
+        snapshot?.frame = previewView.frame
+        previewView.superview?.addSubview(snapshot ?? UIView())
         
         // Creating a snapshot with a UIBlurEffect added
         let snapshotWithBlur = videoPreviewView.snapshotView(afterScreenUpdates: false)
-        snapshotWithBlur!.transform = videoPreviewView.transform
-        snapshotWithBlur!.frame = previewView.frame
+        snapshotWithBlur?.transform = videoPreviewView.transform
+        snapshotWithBlur?.frame = previewView.frame
         
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.frame = snapshotWithBlur!.bounds
+        visualEffectView.frame = snapshotWithBlur?.bounds ?? CGRect.zero
         visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        snapshotWithBlur!.addSubview(visualEffectView)
+        snapshotWithBlur?.addSubview(visualEffectView)
         
-        return (snapshotWithBlur: snapshotWithBlur!, snapshotWithoutBlur: snapshot!)
+        return (snapshotWithBlur: snapshotWithBlur  ?? UIView(), snapshotWithoutBlur: snapshot  ?? UIView())
     }
     
-    class func deviceWithMediaType(_ mediaType: String, preferringPosition position: AVCaptureDevicePosition?) -> AVCaptureDevice? {
-        let devices = AVCaptureDevice.devices(withMediaType: mediaType) as! [AVCaptureDevice]
+    class func deviceWithMediaType(_ mediaType: String, preferringPosition position: AVCaptureDevice.Position?) -> AVCaptureDevice? {
+        let devices = AVCaptureDevice.devices(for: AVMediaType(rawValue: mediaType)) 
         var captureDevice = devices.first
         
         if let position = position {
@@ -1300,7 +1302,7 @@ open class IMGLYCameraController: NSObject {
 }
 
 extension IMGLYCameraController: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-    public func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+    public func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer) else {
             return
         }

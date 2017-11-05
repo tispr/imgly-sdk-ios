@@ -212,7 +212,7 @@ open class IMGLYCropEditorViewController: IMGLYSubEditorViewController {
         anchor.addGestureRecognizer(panGestureRecognizer)
     }
     
-    open func handlePan(_ recognizer:UIPanGestureRecognizer) {
+    @objc open func handlePan(_ recognizer:UIPanGestureRecognizer) {
         if recognizer.view!.isEqual(cropRectComponent.topRightAnchor_) {
             handlePanOnTopRight(recognizer)
         }

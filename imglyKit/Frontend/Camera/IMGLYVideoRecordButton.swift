@@ -23,14 +23,14 @@ public final class IMGLYVideoRecordButton: UIControl {
     fileprivate lazy var outerLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
         layer.strokeColor = UIColor.white.cgColor
-        layer.lineWidth = lineWidth
+        layer.lineWidth = IMGLYVideoRecordButton.lineWidth
         layer.fillColor = UIColor.clear.cgColor
         return layer
         }()
     
     fileprivate lazy var innerLayer: IMGLYShapeLayer = {
         let layer = IMGLYShapeLayer()
-        layer.fillColor = recordingColor.cgColor
+        layer.fillColor = IMGLYVideoRecordButton.recordingColor.cgColor
         return layer
         }()
     

@@ -48,12 +48,12 @@ open class IMGLYCropFilter : CIFilter {
             width: cropRect.size.width * rect.size.width,
             height: -cropRect.size.height * rect.size.height)
         
-        let croppedImage = inputImage.cropping(to: scaledRect)
+        let croppedImage = inputImage.cropped(to: scaledRect)
         
         // CICrop does not actually crop the image, but rather hides parts of the image
         // To actually get the cropped contents only, we have to apply a transform
         let croppedImageRect = croppedImage.extent
-        let transformedImage = croppedImage.applying(CGAffineTransform(translationX: -1 * croppedImageRect.origin.x, y: -1 * croppedImageRect.origin.y))
+        let transformedImage = croppedImage.transformed(by: CGAffineTransform(translationX: -1 * croppedImageRect.origin.x, y: -1 * croppedImageRect.origin.y))
         
         return transformedImage
     }

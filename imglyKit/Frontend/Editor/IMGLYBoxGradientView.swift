@@ -180,7 +180,7 @@ open class IMGLYBoxGradientView : UIView {
         }
     }
     
-    open func handlePanGesture(_ recognizer: UIPanGestureRecognizer) {
+    @objc open func handlePanGesture(_ recognizer: UIPanGestureRecognizer) {
         let location = recognizer.location(in: self)
         informDeletageAboutRecognizerStates(recognizer: recognizer)
         let diffX = location.x - centerPoint.x
@@ -189,7 +189,7 @@ open class IMGLYBoxGradientView : UIView {
         controllPoint2 = CGPoint(x: controllPoint2.x + diffX, y: controllPoint2.y + diffY)
     }
     
-    open func handlePinchGesture(_ recognizer:UIPinchGestureRecognizer) {
+    @objc open func handlePinchGesture(_ recognizer:UIPinchGestureRecognizer) {
         informDeletageAboutRecognizerStates(recognizer: recognizer)
         if recognizer.numberOfTouches > 1 {
             controllPoint1 = recognizer.location(ofTouch: 0, in:self)
