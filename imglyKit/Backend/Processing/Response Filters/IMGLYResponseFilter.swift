@@ -29,7 +29,7 @@ import QuartzCore
 */
 open class IMGLYResponseFilter: CIFilter, IMGLYFilterTypeProtocol {
     /// A CIImage object that serves as input for the filter.
-    open var inputImage: CIImage?
+    @objc open var inputImage: CIImage?
     open var inputIntensity = NSNumber(value: 1 as Float) {
         didSet {
             colorCubeData = nil
