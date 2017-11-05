@@ -19,7 +19,7 @@ import CoreGraphics
 */
 open class IMGLYCropFilter : CIFilter {
     /// A CIImage object that serves as input for the filter.
-    open var inputImage:CIImage?
+    @objc open var inputImage:CIImage?
     
     /// A rect that describes the area that should remain after cropping. 
     /// The values are relative.

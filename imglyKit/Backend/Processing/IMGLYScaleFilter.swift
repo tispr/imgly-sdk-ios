@@ -14,7 +14,7 @@
 #endif
 
 open class IMGLYScaleFilter: CIFilter {
-    open var inputImage: CIImage?
+    @objc open var inputImage: CIImage?
     open var scale = Float(1)
     
     /// Returns a CIImage object that encapsulates the operations configured in the filter. (read-only)

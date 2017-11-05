@@ -18,7 +18,7 @@ import CoreGraphics
 
 open class IMGLYStickerFilter: CIFilter {
     /// A CIImage object that serves as input for the filter.
-    open var inputImage: CIImage?
+    @objc open var inputImage: CIImage?
     
     /// The sticker that should be rendered.
     #if os(iOS)

@@ -28,7 +28,7 @@ import QuartzCore
 */
 open class IMGLYTiltshiftFilter : CIFilter {
     /// A CIImage object that serves as input for the filter.
-    open var inputImage:CIImage?
+    @objc open var inputImage:CIImage?
     /// One of the two points, marking the dimension and direction of the box or circle.
     open var controlPoint1 = CGPoint.zero
     /// One of the two points, marking the dimension and direction of the box or circle.

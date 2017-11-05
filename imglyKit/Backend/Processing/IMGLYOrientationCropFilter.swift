@@ -31,7 +31,7 @@ Represents the angle an image should be rotated by.
 */
 open class IMGLYOrientationCropFilter : CIFilter {
     /// A CIImage object that serves as input for the filter.
-    open var inputImage:CIImage?
+    @objc open var inputImage:CIImage?
     open var cropRect = CGRect(x: 0, y: 0, width: 1, height: 1)
     open var rotationAngle = IMGLYRotationAngle._0
     

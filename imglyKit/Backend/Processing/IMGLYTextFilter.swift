@@ -16,7 +16,7 @@ import AppKit
 
 open class IMGLYTextFilter : CIFilter {
     /// A CIImage object that serves as input for the filter.
-    open var inputImage:CIImage?
+    @objc open var inputImage:CIImage?
     /// The text that should be rendered.
     open var text = ""
     /// The name of the used font.

@@ -21,7 +21,7 @@ import QuartzCore
 */
 open class IMGLYEnhancementFilter : CIFilter {
     /// A CIImage object that serves as input for the filter.
-    open var inputImage:CIImage?
+    @objc open var inputImage:CIImage?
     
     #if os(iOS)
     /// If this is set to false, the original image is returned.

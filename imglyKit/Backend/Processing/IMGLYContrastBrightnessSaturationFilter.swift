@@ -16,7 +16,7 @@ import QuartzCore
 
 open class IMGLYContrastBrightnessSaturationFilter : CIFilter {
     /// A CIImage object that serves as input for the filter.
-    open var inputImage:CIImage?
+    @objc open var inputImage:CIImage?
     
     open var contrast:Float = 1.0
     open var brightness:Float = 0.0
